@@ -1,0 +1,163 @@
+@import 'tailwindcss';
+
+/*
+ * Every colour, once per mode, named as in the design (claude.ai/artifact/5iWRZZgpdrMq2CFHTSxjSn).
+ * The device setting picks the mode unless the header switch has set data-theme on <html>.
+ * Leather red (action) is the only accent: the Bowl it button, the ball path, the At the batter card and slider fills.
+ * It is the red of a new SG ball, #b61426, the median of its leather in photo2.jpeg. By day the accent is that red; at
+ * night it is the same hue a little brighter, as under floodlights, so the path and borders keep 3:1 on the dark panels.
+ * The scene tokens (sky to stumps, and the pink and white balls) are read by the 3D view as well (src/scene/tokens.ts).
+ */
+:root {
+  color-scheme: dark;
+  --bg: #0e0f11;
+  --panel: #17191c;
+  --panel-2: #1f2226;
+  --border: #2a2d33;
+  --border-2: #363a41;
+  --text: #f3f4f6;
+  --text-soft: #d4d7dd;
+  --text-muted: #a1a6af;
+  --selected-bg: #f3f4f6;
+  --selected-fg: #0e0f11;
+  --selected-sub: #4b5058;
+  --action: #d21f33;
+  --on-action: #ffffff;
+  --link: #f47a86;
+  --ball: #b61426;
+  --pink-ball: #e8579b;
+  --white-ball: #f0eee7;
+  --sky: #0f1114;
+  --stands: #16181c;
+  --grass: #1e6b45;
+  --pitch: #c9b27a;
+  --ring: #ffffff;
+  --crease: #f4eedd;
+  --stumps: #f2e6c4;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    color-scheme: light;
+    --bg: #f5f5f2;
+    --panel: #ffffff;
+    --panel-2: #f0f0ec;
+    --border: #e2e2dd;
+    --border-2: #cbcbc5;
+    --text: #16181b;
+    --text-soft: #3b3f46;
+    --text-muted: #5d626a;
+    --selected-bg: #16181b;
+    --selected-fg: #ffffff;
+    --selected-sub: #c3c7cd;
+    --action: #b61426;
+    --on-action: #ffffff;
+    --link: #9b111e;
+    --sky: #d3e2ec;
+    --stands: #b9c3cb;
+    --grass: #3e8e4a;
+    --pitch: #d8c38c;
+    --ring: #16181b;
+  }
+}
+
+/* The same light values, for the header switch. Kept in step with the block above. */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f5f5f2;
+  --panel: #ffffff;
+  --panel-2: #f0f0ec;
+  --border: #e2e2dd;
+  --border-2: #cbcbc5;
+  --text: #16181b;
+  --text-soft: #3b3f46;
+  --text-muted: #5d626a;
+  --selected-bg: #16181b;
+  --selected-fg: #ffffff;
+  --selected-sub: #c3c7cd;
+  --action: #b61426;
+  --on-action: #ffffff;
+  --link: #9b111e;
+  --sky: #d3e2ec;
+  --stands: #b9c3cb;
+  --grass: #3e8e4a;
+  --pitch: #d8c38c;
+  --ring: #16181b;
+}
+
+/* Tailwind names for the tokens: bg-panel, border-line, text-muted, bg-sel, bg-action... */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-raised: var(--panel-2);
+  --color-line: var(--border);
+  --color-edge: var(--border-2);
+  --color-text: var(--text);
+  --color-soft: var(--text-soft);
+  --color-muted: var(--text-muted);
+  --color-sel: var(--selected-bg);
+  --color-on-sel: var(--selected-fg);
+  --color-sel-sub: var(--selected-sub);
+  --color-action: var(--action);
+  --color-on-action: var(--on-action);
+  --color-link: var(--link);
+  --color-ball: var(--ball);
+  --color-grass: var(--grass);
+  --color-pitch: var(--pitch);
+  --color-ring: var(--ring);
+  --color-crease: var(--crease);
+  --color-stumps: var(--stumps);
+}
+
+@theme {
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --radius-card: 14px;
+}
+
+/* In the base layer, so utility classes can override these. */
+@layer base {
+  html {
+    background: var(--bg);
+  }
+
+  /* Not on html: Tailwind sizes are in rem, and a 15 px root would shrink the 44 px touch targets. */
+  body {
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  /* Laptops and desktops: the whole interface scales with the window, so the simulator fits on one screen from
+     a 13-inch laptop to a large monitor. Full size from about 900 px tall and 1280 px wide; never below 11 px.
+     Mouse only, so the 44 px touch targets on tablets keep their size. */
+  @media (min-width: 1024px) and (pointer: fine) {
+    html {
+      font-size: clamp(11px, min(100dvh / 56, 100vw / 80), 16px);
+    }
+    body {
+      font-size: 0.9375rem;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+  }
+
+  button:not(:disabled),
+  select,
+  label[for],
+  input[type='range'] {
+    cursor: pointer;
+  }
+
+  input[type='range'] {
+    accent-color: var(--action);
+  }
+
+  a {
+    color: var(--link);
+  }
+}
